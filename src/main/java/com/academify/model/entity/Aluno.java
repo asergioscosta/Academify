@@ -1,13 +1,12 @@
 package com.academify.model.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+@Entity
+@Table(name = "aluno")
 public class Aluno {
 
     @Id
