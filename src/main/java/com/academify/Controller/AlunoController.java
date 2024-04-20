@@ -1,24 +1,65 @@
 package com.academify.Controller;
 
+import com.academify.service.AlunoService;
 import com.academify.model.entity.Aluno;
-import com.academify.model.repository.AlunoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/alunos")
+@RequestMapping("/api/aluno")
 public class AlunoController {
 
-    @Autowired
-    private AlunoRepository alunoRepository;
+    private final AlunoService alunoService;
 
-    @GetMapping("/listar")
-    public List<Aluno> listar() {
-        return alunoRepository.findAll();
+    public AlunoController(AlunoService alunoService){
+        this.alunoService = alunoService;
     }
 
+    @GetMapping()
+    public ResponseEntity findAll(){
+        return ResponseEntity.ok(alunoService.findAll());
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity findById(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok(alunoService.findbyId(id));
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping()
+    public ResponseEntity save(@RequestBody Aluno aluno) {
+        try {
+            return ResponseEntity.ok(alunoService.save(aluno));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping()
+    public ResponseEntity edit(@RequestBody Aluno aluno) {
+        try {
+            return ResponseEntity.ok(alunoService.save(aluno));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity delete(@@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok(alunoService.delete(id));
+        } catch (Exception e) {
+            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/total")
+    public ResponseEntity getTotal(){
+        return ResponseEntity.ok(alunoService.count());
+    }
 }
